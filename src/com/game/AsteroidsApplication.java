@@ -1,18 +1,17 @@
 package com.game;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class AsteroidsApplication extends Application {
+
+    public static int WIDTH = 300;
+    public static int HEIGHT = 200;
 
     public static void main (String[] args) {
         launch(args);
@@ -21,12 +20,16 @@ public class AsteroidsApplication extends Application {
     @Override
     public void start (Stage stage) {
         Pane pane = new Pane();
-        pane.setPrefSize(600, 400);
+        pane.setPrefSize(WIDTH, HEIGHT);
 
-        Ship ship = new Ship(150,150);
+        Ship ship = new Ship(WIDTH / 2, HEIGHT / 2);
+        List<Asteroid> asteroids = generateAsteroids();
 
         // node classını inherit eden polygon ve circle rotate methodunu kullanabilir
         pane.getChildren().add(ship.getCharacter());
+        asteroids.forEach(asteroid -> {
+            pane.getChildren().add(asteroid.getCharacter());
+        });
 
         Scene scene = new Scene(pane);
 
@@ -36,7 +39,6 @@ public class AsteroidsApplication extends Application {
 
         scene.setOnKeyPressed(event -> pressedKeys.put(event.getCode(), Boolean.TRUE));
         scene.setOnKeyReleased(event -> pressedKeys.put(event.getCode(), Boolean.FALSE));
-
 
         // saniyede 60 kere (60fps) run eden animation timer başlat
         new AnimationTimer() {
@@ -55,11 +57,30 @@ public class AsteroidsApplication extends Application {
                 }
 
                 ship.move();
+                asteroids.forEach(asteroid -> asteroid.move());
+
+                asteroids.forEach(asteroid -> {
+                    if (ship.collide(asteroid)) {
+                        stop();
+                    }
+                });
             }
         }.start();
 
         stage.setTitle("Asteroids!");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private List<Asteroid> generateAsteroids () {
+        List<Asteroid> asteroidList = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            Random rnd = new Random();
+            Asteroid asteroid = new Asteroid(rnd.nextInt(WIDTH / 3), rnd.nextInt(HEIGHT / 2));
+            asteroidList.add(asteroid);
+        }
+
+        return asteroidList;
     }
 }
