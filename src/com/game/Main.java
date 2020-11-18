@@ -8,12 +8,13 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    public static void main(String[] args) {
-	    launch(args);
+    public static void main (String[] args) {
+        launch(args);
+        System.out.println("Deneme Test");
     }
 
     @Override
-    public void start (Stage stage) throws Exception {
+    public void start (Stage stage) {
         Pane pane = new Pane();
         pane.setPrefSize(300, 200);
         pane.getChildren().add(new Circle(30, 50, 10));
