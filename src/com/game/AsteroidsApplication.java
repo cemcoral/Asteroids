@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AsteroidsApplication extends Application {
 
@@ -57,6 +58,7 @@ public class AsteroidsApplication extends Application {
                     ship.accelerate();
                 }
 
+                // sadece 3 tane projectile kabul edilir
                 if (pressedKeys.getOrDefault(KeyCode.SPACE, false) && projectiles.size() < 3) {
 
                     Projectile projectile = new Projectile((int) ship.getCharacter().getTranslateX(), (int) ship.getCharacter().getTranslateY());
@@ -72,6 +74,36 @@ public class AsteroidsApplication extends Application {
                 ship.move();
                 asteroids.forEach(asteroid -> asteroid.move());
                 projectiles.forEach(projectile -> projectile.move());
+
+                // projectile ile çarpışma sonucu silinmesi gereken asteroidler && projectilelar ölü olarak işaretlenir
+                projectiles.forEach(projectile -> {
+                    asteroids.forEach(asteroid -> {
+                        if (projectile.collide(asteroid)) {
+                            projectile.setAlive(false);
+                            asteroid.setAlive(false);
+                        }
+                    });
+                });
+
+                // ölü projectilelar ekrandan silinir
+                projectiles.stream()
+                        .filter(projectile -> !projectile.isAlive())
+                        .forEach(projectile -> pane.getChildren().remove(projectile.getCharacter()));
+
+                // ölü projectile'lar ana listeden silinir
+                projectiles.removeAll(projectiles.stream()
+                .filter(projectile -> !projectile.isAlive())
+                .collect(Collectors.toList()));
+
+                // ölü asteroidler ekrandan silinir
+                asteroids.stream()
+                        .filter(asteroid -> !asteroid.isAlive())
+                        .forEach(asteroid -> pane.getChildren().remove(asteroid.getCharacter()));
+
+                // ölü asteroidler ana listeden silinir
+                asteroids.removeAll(asteroids.stream()
+                        .filter(asteroid -> !asteroid.isAlive())
+                        .collect(Collectors.toList()));
 
                 asteroids.forEach(asteroid -> {
                     if (ship.collide(asteroid)) {
