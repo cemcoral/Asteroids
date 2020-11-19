@@ -4,15 +4,17 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class AsteroidsApplication extends Application {
 
-    public static int WIDTH = 300;
-    public static int HEIGHT = 200;
+    public static int WIDTH = 1600;
+    public static int HEIGHT = 900;
 
     public static void main (String[] args) {
         launch(args);
@@ -21,11 +23,16 @@ public class AsteroidsApplication extends Application {
     @Override
     public void start (Stage stage) {
         Pane pane = new Pane();
+        Text text = new Text(10, 20, "Points: 0");
         pane.setPrefSize(WIDTH, HEIGHT);
 
         Ship ship = new Ship(WIDTH / 2, HEIGHT / 2);
         List<Asteroid> asteroids = generateAsteroids();
         List<Projectile> projectiles = new ArrayList<>();
+
+        pane.getChildren().add(text);
+        // concurrent puanlama sistemi için atomic integer tanımlanır
+        AtomicInteger points = new AtomicInteger();
 
         // node classını inherit eden polygon ve circle rotate methodunu kullanabilir
         pane.getChildren().add(ship.getCharacter());
@@ -81,6 +88,8 @@ public class AsteroidsApplication extends Application {
                         if (projectile.collide(asteroid)) {
                             projectile.setAlive(false);
                             asteroid.setAlive(false);
+                            // puan eklenir
+                            text.setText("Points: " + points.addAndGet(1000));
                         }
                     });
                 });
