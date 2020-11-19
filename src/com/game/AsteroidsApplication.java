@@ -24,6 +24,7 @@ public class AsteroidsApplication extends Application {
 
         Ship ship = new Ship(WIDTH / 2, HEIGHT / 2);
         List<Asteroid> asteroids = generateAsteroids();
+        List<Projectile> projectiles = new ArrayList<>();
 
         // node classını inherit eden polygon ve circle rotate methodunu kullanabilir
         pane.getChildren().add(ship.getCharacter());
@@ -56,8 +57,21 @@ public class AsteroidsApplication extends Application {
                     ship.accelerate();
                 }
 
+                if (pressedKeys.getOrDefault(KeyCode.SPACE, false) && projectiles.size() < 3) {
+
+                    Projectile projectile = new Projectile((int) ship.getCharacter().getTranslateX(), (int) ship.getCharacter().getTranslateY());
+                    projectile.getCharacter().setRotate(ship.getCharacter().getRotate());
+                    projectiles.add(projectile);
+
+                    projectile.accelerate();
+                    projectile.setMovement(projectile.getMovement().normalize().multiply(3));
+
+                    pane.getChildren().add(projectile.getCharacter());
+                }
+
                 ship.move();
                 asteroids.forEach(asteroid -> asteroid.move());
+                projectiles.forEach(projectile -> projectile.move());
 
                 asteroids.forEach(asteroid -> {
                     if (ship.collide(asteroid)) {

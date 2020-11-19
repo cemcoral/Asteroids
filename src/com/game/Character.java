@@ -1,5 +1,4 @@
 package com.game;
-
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
@@ -29,10 +28,39 @@ public abstract class Character {
         this.character.setRotate(this.character.getRotate() + 5);
     }
 
+    public Point2D getMovement () {
+        return movement;
+    }
+
+    public void setMovement (Point2D movement) {
+        this.movement = movement;
+    }
+
     public void move () {
         // hareket koordinatları geminin varolan koordinatlarıyla toplanır yeni gemi koordinatları hesaplanır
         this.character.setTranslateX(this.character.getTranslateX() + this.movement.getX());
         this.character.setTranslateY(this.character.getTranslateY() + this.movement.getY());
+
+        // eğer karakter ekranın solundan çıkmışsa
+
+        if (this.character.getTranslateX() < 0) {
+            this.character.setTranslateX(this.character.getTranslateX() + AsteroidsApplication.WIDTH);
+        }
+
+        // eğer karakter ekranın sağından çıkmışsa
+        if (this.character.getTranslateX() > AsteroidsApplication.WIDTH) {
+            this.character.setTranslateX(this.character.getTranslateX() % AsteroidsApplication.WIDTH);
+        }
+
+        // eğer karakter ekranın üstünden çıkmışsa
+        if (this.character.getTranslateY() < 0) {
+            this.character.setTranslateY(this.character.getTranslateY() + AsteroidsApplication.HEIGHT);
+        }
+
+        // eğer karakter ekranın aşağısından çıkmışsa
+        if (this.character.getTranslateY() > AsteroidsApplication.HEIGHT) {
+            this.character.setTranslateY(this.character.getTranslateY() % AsteroidsApplication.HEIGHT);
+        }
     }
 
     public void accelerate () {
