@@ -1,4 +1,5 @@
 package com.game;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -6,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -18,16 +18,18 @@ import java.util.stream.Collectors;
 
 public class AsteroidsApplication extends Application {
 
-    public static int WIDTH = 800;
-    public static int HEIGHT = 600;
+    public static int WIDTH = 1920;
+    public static int HEIGHT = 1080;
     private int difficulty = 1;
 
-    public static void main (String[] args) {
-        launch(args);
+    public static void main(String[] args) {
+        // fedora gnome fps uçup gittiği için
+        System.setProperty("quantum.multithreaded", "false");
+        Application.launch(AsteroidsApplication.class, args);
     }
 
     @Override
-    public void start (Stage stage) {
+    public void start(Stage stage) {
 
         Pane pane = new Pane();
         Text text = new Text(10, 20, "Points: 0");
@@ -62,7 +64,7 @@ public class AsteroidsApplication extends Application {
         // saniyede 60 kere (60fps) run eden animation timer başlat
         new AnimationTimer() {
             @Override
-            public void handle (long now) {
+            public void handle(long now) {
 
                 addRandomAsteroids(ship, asteroids, pane);
 
@@ -140,7 +142,7 @@ public class AsteroidsApplication extends Application {
         stage.show();
     }
 
-    private void addRandomAsteroids (Ship ship, List<Asteroid> asteroids, Pane pane) {
+    private void addRandomAsteroids(Ship ship, List<Asteroid> asteroids, Pane pane) {
 
         double choice = 0;
 
@@ -163,7 +165,7 @@ public class AsteroidsApplication extends Application {
         }
     }
 
-    private List<Asteroid> generateAsteroids () {
+    private List<Asteroid> generateAsteroids() {
         List<Asteroid> asteroidList = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
@@ -175,7 +177,7 @@ public class AsteroidsApplication extends Application {
         return asteroidList;
     }
 
-    private BorderPane difficultyScreen (Stage stage, Scene gameScene) {
+    private BorderPane difficultyScreen(Stage stage, Scene gameScene) {
         BorderPane screen = new BorderPane();
 
         Button easy = new Button("Easy Peazy");
@@ -184,7 +186,7 @@ public class AsteroidsApplication extends Application {
         average.setPrefWidth(100);
         Button hard = new Button("Hard");
         hard.setPrefWidth(100);
-        Button impossible = new Button("Get Fucked");
+        Button impossible = new Button("Deathwish");
         impossible.setPrefWidth(100);
 
         VBox vbox = new VBox();
